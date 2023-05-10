@@ -19,4 +19,6 @@ public class ProductRequestDTO {
 
     private Long categoryId;
 
+	//test komentar
+
 }
