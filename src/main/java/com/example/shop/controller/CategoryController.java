@@ -1,7 +1,6 @@
 package com.example.shop.controller;
 
 import com.example.shop.model.Category;
-import com.example.shop.model.Product;
 import com.example.shop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,21 +13,33 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @Autowired
     public CategoryController(CategoryService categoryService) {
-        this.categoryService=categoryService;
+        this.categoryService = categoryService;
     }
 
     @PostMapping
-    public ResponseEntity<Category> createMovie(@RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         return new ResponseEntity<>(categoryService.createCategory(category), HttpStatus.CREATED);
     }
 
-    @GetMapping
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
+        return new ResponseEntity<>(categoryService.getCategoryById(id), HttpStatus.OK);
+    }
+
+    @GetMapping()
     public ResponseEntity<List<Category>> getCategories() {
         return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id){
+        categoryService.deleteCategoryById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

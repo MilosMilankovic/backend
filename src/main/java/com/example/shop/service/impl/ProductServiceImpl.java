@@ -2,47 +2,52 @@ package com.example.shop.service.impl;
 
 import com.example.shop.dto.ProductRequestDTO;
 import com.example.shop.dto.ProductResponseDTO;
+import com.example.shop.mapper.ProductMapper;
 import com.example.shop.model.Category;
+import com.example.shop.model.CategoryType;
 import com.example.shop.model.Product;
-import com.example.shop.repository.CategoryRepository;
 import com.example.shop.repository.ProductRepository;
 import com.example.shop.service.CategoryService;
+import com.example.shop.service.CategoryTypeService;
 import com.example.shop.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;
-    private CategoryService categoryService;
+    private CategoryTypeService categoryTypeService;
+    private ProductMapper productMapper;
 
     @Override
-    public Product createProduct(ProductRequestDTO product) {
-        Product product1 = new Product();
-        product1.setName(product.getName());
-        product1.setDescription(product.getDescription());
-        Category category = categoryService.getCategory(product.getCategoryId());
-        product1.setCategory(category);
-        return productRepository.save(product1);
+    public Product createProduct(ProductRequestDTO productRequestDTO) {
+        CategoryType categoryType = categoryTypeService.getCategoryTypeById(productRequestDTO.getCategoryId());
+        // TODO Fali provera da li postoji ? Ako ne postoji ovde se baca exception zato sto proizvod ne moze da se cuva u bazu bez category Type
+        Product product = productMapper.productRequestDTOToProduct(productRequestDTO);
+        product.setCategoryType(categoryType);
+        return productRepository.save(product);
     }
 
     @Override
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public List<ProductResponseDTO> getProducts() {
+        return productRepository.findAll().stream()
+                .map(product -> productMapper.productToProductResponseDTO(product))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public ProductResponseDTO getProduct(Long id) {
-        Product product = productRepository.getById(id);
-        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-        productResponseDTO.setId(product.getId());
-        productResponseDTO.setName(product.getName());
-        productResponseDTO.setCategory(product.getCategory());
-        return productResponseDTO;
+    public ProductResponseDTO getProductById(Long id) {
+        return productMapper.productToProductResponseDTO(productRepository.findById(id).get());
+    }
+
+    @Override
+    public void deleteProductById(Long id) {
+        productRepository.deleteById(id);
     }
 
 
