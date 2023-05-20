@@ -1,5 +1,6 @@
 package com.example.shop.controller;
 
+import com.example.shop.dto.CategoryDTO;
 import com.example.shop.model.Category;
 import com.example.shop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,18 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO category) {
         return new ResponseEntity<>(categoryService.createCategory(category), HttpStatus.CREATED);
     }
 
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
         return new ResponseEntity<>(categoryService.getCategoryById(id), HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Category>> getCategories() {
+    public ResponseEntity<List<CategoryDTO>> getCategories() {
         return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
     }
 

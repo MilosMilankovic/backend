@@ -11,9 +11,7 @@ import org.mapstruct.MappingConstants;
 public interface ProductMapper {
 
 
-    @Mapping(target = "description", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "category", ignore = true)
+
     ProductResponseDTO productToProductResponseDTO(Product product);
 
 

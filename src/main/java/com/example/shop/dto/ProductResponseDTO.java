@@ -1,6 +1,7 @@
 package com.example.shop.dto;
 
 import com.example.shop.model.Category;
+import com.example.shop.model.CategoryType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -16,6 +17,6 @@ public class ProductResponseDTO {
     private String description;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Category category;
+    private CategoryType categoryType;
 
 }
